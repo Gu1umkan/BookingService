@@ -14,7 +14,7 @@ public class Main {
                     1.РЕГИСТРАЦИЯ
                     2.УЖЕ ЕСТЬ АККАУНТ.ВОЙТИ
                     3.Админ
-                    3.ВЫЙТ
+                    3.ВЫЙТИ
                     """);
             System.out.print("ВВЕДИТЕ КОМАНДУ:");
             switch (scanner.nextLine().toUpperCase()) {
@@ -48,7 +48,7 @@ public class Main {
                     if (managment.admin()) {
                     inner:
                     while (true) {
-                            System.out.println(STR."""
+                            System.out.print(STR."""
                                     1.КЛИЕНТЫ
                                     2.МАШИНЫ
                                     3.ВОДИТЕЛИ
@@ -60,7 +60,7 @@ public class Main {
                                 case "1" -> managment.getUsersInfo();
                                 case "2" -> managment.infoCar();
                                 case "3" -> managment.getDriversInfo();
-                                case "4" -> System.out.println(managment.getCompanyBalance());
+                                case "4" -> System.out.println("Счет компании: $"+managment.getCompanyBalance());
                                 case "5" -> {
                                     break inner;
                                 }
@@ -70,6 +70,7 @@ public class Main {
                     }
                 }
                 case "4" -> System.exit(0);
+                default -> System.out.println("Неправильный выбор❗");
             }
 
         }

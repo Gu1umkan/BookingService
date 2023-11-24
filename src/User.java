@@ -1,5 +1,6 @@
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -38,7 +39,7 @@ public class User {
     }
 
     public void setEmail(String email, User[] users) {
-        chekEmail(email, users);
+        this.email = chekEmail(email, users);
     }
 
     public String getPassword() {
@@ -46,7 +47,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = chekPassword(password);
     }
 
     public String getAdress() {
@@ -62,15 +63,28 @@ public class User {
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = chekScanner(phoneNumber);
+        this.phoneNumber = chekPhoneNUmber(phoneNumber);
     }
 
     public BigDecimal getAvailableBalance() {
         return availableBalance;
     }
 
-    public void setAvailableBalance(BigDecimal availableBalance) {
-        this.availableBalance = availableBalance;
+    public void setAvailableBalance() {
+        this.availableBalance = chekScannerkBigDecimal();
+    }
+
+
+    public void setCar(Car[] car) {
+        this.car = car;
+    }
+
+    public Bank getmBank() {
+        return mBank;
+    }
+
+    public void setmBank(Bank mBank) {
+        this.mBank = mBank;
     }
 
     public Car[] getCar() {
@@ -82,14 +96,19 @@ public class User {
         newCars[this.car.length] = car;
         this.car = newCars;
     }
-    public void chekEmail(String email, User[] users) {
-        boolean isTrue = true;
-        while (isTrue) {
-            if (isValidEmail(email) && isEmailUnique(email, users)) {
-                this.email = email;
-                isTrue = false;
-            } else {
-                System.out.printf("Имя пользователя %s уже используется.\n Пожалуйста, введите другой email : ", email);
+
+    private String chekEmail(String email, User[] users) {
+        while (true) {
+            try {
+                if (isValidEmail(email) && isEmailUnique(email, users)) {
+                    return email;
+                } else if (!isValidEmail(email)) {
+                    throw new MyException("email должно заканчиваться на \"@gmail.com\"");
+                } else {
+                    throw new MyException("email уже используется.\n Пожалуйста, введите другой email : ");
+                }
+            } catch (MyException e) {
+                System.out.println(e.getMessage());
                 email = new Scanner(System.in).nextLine();
             }
         }
@@ -108,8 +127,36 @@ public class User {
         return true;
     }
 
+    private String chekPassword(String password) {
+        while (true) {
+            if (password.length() > 3){
+                return password;
+            }
+            else {
+                System.out.println("Пароль должен содержать  от 4 до 12 символов❗️");
+                password = new Scanner(System.in).nextLine();
+            }
+        }
 
-    private static String chekScanner(String scannerWord) {
+    }
+
+    private String chekPhoneNUmber(String phoneNumber) {
+        while (true) {
+            try {
+                if (phoneNumber.startsWith("+996") && phoneNumber.length() == 13) {
+                    return phoneNumber;
+                } else if (phoneNumber.length() != 13) {
+                    throw new MyException(" должен быть номер телефона  13 цифр ");
+                } else
+                    throw new MyException(" Номер телефона недействителен. Оно должно начинаться с \"+996\". ");
+            } catch (MyException e) {
+                System.out.println(e.getMessage());
+                 phoneNumber = new Scanner(System.in).nextLine();
+            }
+        }
+    }
+
+    public static String chekScanner(String scannerWord) {
         boolean isTrue = true;
         while (isTrue) {
             if (!scannerWord.isBlank()) {
@@ -123,6 +170,16 @@ public class User {
         return null;
     }
 
+    private static BigDecimal chekScannerkBigDecimal() {
+        while (true) {
+            try {
+                BigDecimal bigDecimal = new Scanner(System.in).nextBigDecimal();
+                return bigDecimal;
+            } catch (InputMismatchException e) {
+                System.out.println("Неверный Ввод. Введите допустимое значение BigDecimal.");
+            }
+        }
+    }
 
 
     public static User[] regstration(User user, User[] users) {
@@ -140,7 +197,7 @@ public class User {
         System.out.print("Введите тел.номер:");
         user.setPhoneNumber(scanner.nextLine());
         System.out.print("Внесите оплату на счет: $");
-        user.setAvailableBalance(new Scanner(System.in).nextBigDecimal());
+        user.setAvailableBalance();
         users = Arrays.copyOf(users, users.length + 1);
         users[users.length - 1] = user;
         System.out.println("Успешно зарегистрирован 🙌\n");
@@ -186,7 +243,7 @@ public class User {
         switch (choice) {
             case "да" -> {
                 System.out.print("Сумма депозита: $");
-                BigDecimal deposit = new Scanner(System.in).nextBigDecimal();
+                BigDecimal deposit = chekScannerkBigDecimal();
                 availableBalance = availableBalance.add(deposit);
                 mBank.menegerBankAccount(deposit);
                 System.out.println("Вы успешно внесли деньги на счет банка");
@@ -195,14 +252,20 @@ public class User {
             case "нет" -> {
                 return false;
             }
+            default -> {
+                System.out.println("Неправильный выбор❗️");
+                return false;
+            }
         }
         return true;
     }
-    public void getcarsUser(){
-        for (Car car1:car) {
+
+    public void getcarsUser() {
+        for (Car car1 : car) {
             System.out.println(car1.name());
         }
     }
+
 
 }
 
