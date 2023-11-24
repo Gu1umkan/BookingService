@@ -2,7 +2,7 @@ import java.math.BigDecimal;
 
 public enum Car {
     FERRARI(BigDecimal.valueOf(1000), Driver.AYDAR, true),
-    HONDA(BigDecimal.valueOf(500), Driver.DAVRON, false),
+    HONDA(BigDecimal.valueOf(500), Driver.DAVRON, true),
     MRS(BigDecimal.valueOf(400), Driver.BEKTURGAN, true),
     TOYOTA(BigDecimal.valueOf(100), Driver.ISLAM, true),
     KIA(BigDecimal.valueOf(340), Driver.ELDAR, true),
